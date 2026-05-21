@@ -41,7 +41,15 @@ await app.register(fastifyStatic, {
 
 // Serve index.html
 app.get("/", async (request, reply) => {
+    console.log("✅ Frontend Loaded Successfully");
   return reply.sendFile("index.html");
+});
+
+app.get("/health", async (request, reply) => {
+  return {
+    success: true,
+    message: "CI/CD Auto Deployment Working Successfully 🚀"
+  };
 });
 
 // Server start

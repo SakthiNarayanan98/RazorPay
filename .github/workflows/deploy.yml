@@ -19,12 +19,12 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
 
           script: |
-            cd RazorPay
+            cd ~/RazorPay
 
             git pull origin main
 
-            sudo docker stop razorpay-container || true
-            sudo docker rm razorpay-container || true
+            sudo docker stop $(sudo docker ps -q) || true
+            sudo docker rm $(sudo docker ps -a -q) || true
 
             sudo docker build -t razorpay-app .
 

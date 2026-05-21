@@ -58,7 +58,7 @@ const PORT = process.env.PORT || 8000;
 app.listen({ port: PORT, host: "0.0.0.0" })
   .then(async () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    console.log("🟩 Temporal client connected");
+    console.log("🟩 backend client connected");
   })
   .catch(err => {
     console.error("❌ Server failed:", err);

@@ -41,7 +41,7 @@ await app.register(fastifyStatic, {
 
 // Serve index.html
 app.get("/", async (request, reply) => {
-    console.log("✅ Frontend Loaded Successfully");
+    console.log("✅ Backend Successfully");
   return reply.sendFile("index.html");
 });
 

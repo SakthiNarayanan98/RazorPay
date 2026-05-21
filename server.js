@@ -6,6 +6,7 @@ import workflowRouter from "./src/routers/workflowRouter.js";
 import multipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
 import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -29,11 +30,18 @@ await app.register(multipart, {
 // Routes
 app.register(workflowRouter);
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files
+await app.register(fastifyStatic, {
+  root: __dirname,
+});
+
+
+// Serve index.html
 app.get("/", async (request, reply) => {
-  return {
-    success: true,
-    message: "Fastify Docker App Running"
-  };
+  return reply.sendFile("index.html");
 });
 
 // Server start

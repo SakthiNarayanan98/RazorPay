@@ -1,0 +1,35 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+
+        with:
+          host: 43.205.196.229
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+
+          script: |
+            cd RazorPay
+
+            git pull origin main
+
+            sudo docker stop razorpay-container || true
+            sudo docker rm razorpay-container || true
+
+            sudo docker build -t razorpay-app .
+
+            sudo docker run -d \
+              --name razorpay-container \
+              --env-file .env \
+              -p 8000:8000 \
+              razorpay-app

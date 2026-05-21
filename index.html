@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+
+<button onclick="payNow()">Pay Now</button>
+
+<script>
+
+async function payNow() {
+
+  // STEP 1: Create Order
+  const response = await fetch("http://localhost:8000/payment", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      amount: 1000
+    })
+  });
+
+  const data = await response.json();
+
+  // STEP 2: Razorpay Checkout
+  const options = {
+    key: data.key,
+    amount: data.amount,
+    currency: data.currency,
+    order_id: data.orderId,
+
+    name: "Test Company",
+    description: "Test Payment",
+
+    handler: async function (response) {
+
+      console.log("PAYMENT SUCCESS", response);
+
+      // STEP 3: Verify Payment
+      const verifyResponse = await fetch(
+        "http://localhost:8000/payment/verify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(response)
+        }
+      );
+
+      const verifyData = await verifyResponse.json();
+
+      alert(verifyData.message);
+    },
+
+    theme: {
+      color: "#3399cc"
+    }
+  };
+
+  const rzp = new Razorpay(options);
+
+  rzp.open();
+}
+
+</script>
+
+</body>
+</html>
